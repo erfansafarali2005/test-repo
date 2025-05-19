@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{% block title %} User Profile {% endblock title %}
+
+{% block body %}
+
+    {% if request.user.id == user.id %}
+        <a href="{% url 'post:post_create' %}" class="btn btn-primary">Create</a>
+    {% endif %}
+
+    {% if posts %}
+
+        {% for post in posts %}
+
+            <h1>{{ post.user.username }}</h1>
+            <a href="{% url 'post:post_detail' post.id post.slug %}" ><h2>{{ post.body | truncatewords:8 }}</h2></a>
+
+        {% endfor %}
+        
+    {% else %}
+        <h1>No post yet </h1>
+    {% endif %}
+
+
+
+{% endblock body %}

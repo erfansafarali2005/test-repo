@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock title %}
+
+{% block body %}
+
+    <h1>hello</h1>
+
+    {% for post in posts %}
+
+        <a href="{% url 'account:user_profile' post.user.id %}"><h1> user : {{ post.user }} </h1></a>
+        <a href="{% url 'post:post_detail' post.id post.slug %}"><h2> body : {{ post.body }} </h2> </a>
+        <h3> date : {{ post.created_date | truncatewords:8 }} </h3>
+
+    {% endfor %}
+
+
+
+{% endblock body %}

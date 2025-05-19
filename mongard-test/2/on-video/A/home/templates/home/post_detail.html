@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %} Post detail {% endblock title %}
+
+{% block body %}
+
+
+    {% if request.user.id == post.user.id %}
+        <a class="btn btn-danger" href="{% url 'home:post_delete' post.id %}">Delete</a>
+        <a class="btn btn-danger" href="{% url 'home:post_update' post.id %}">Update</a>
+    {% endif %}
+    <a href="{% url 'account:user_profile' post.user.id %}"><h1>{{ post.user.username }}</h1></a>
+    <p>{{ post.body }}</p> - <p>{{ post.updated | date:"Y-M" }}</p><hr>
+
+
+    {% if request.user.is_authenticated %}
+        <form method="post" action="" novalidate>
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Create">
+        </form><br>
+    {% else %}
+        <p class="alert alert-danger">Only logged in users can post comments </p>
+    {% endif %}
+
+    {% for comment in comments %}
+
+        <div class="card bg-dark text-white">
+
+            <p class="card-header">{{ comment.user }} | {{ comment.created | timesince }} ago</p>
+            <p class="card-body">{{ comment.body }}</p>
+
+            {% if request.user.is_authenticated %}
+                <form method="post" action="{% url 'home:add_reply' post.id comment.id %}" novalidate>
+
+                    {% csrf_token %}
+                    {{ reply_form.as_p }}
+                    <input type="submit" value="send">
+
+                </form>
+            {% endif %}
+
+            {% with replies=comment.rcomments.all %}
+                {% for reply in replies %}
+                    <p class="bg-primary p-3 m-2">{{ reply.user }} <br> {{ reply.body }}</p>
+                {% endfor %}
+            {% endwith %}
+
+        </div><br>
+
+    {% empty %}
+        <p>No comments yet</p>
+
+    {% endfor %}
+
+{% endblock body %}

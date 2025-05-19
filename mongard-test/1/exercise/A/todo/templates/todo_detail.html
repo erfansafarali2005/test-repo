@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} detail Todo {% endblock title %}
+
+{% block body %}
+
+
+  <div>
+
+    <a href="{% url 'todo:todo_delete' todo.id %}" class="btn btn-danger" >Delete</a>
+    <a href="{% url 'todo:todo_update' todo.id %}" class="btn btn-info" >Update</a>
+    <h1> title : {{todo.title}}</h1>
+    <h2> body :  {{todo.body}}</h2>
+    <h3> creation date :  {{todo.created_date}}</h3>
+    <h4> updated date :  {{todo.updated_date}}</h4>
+
+
+  </div>
+
+
+{% endblock body %}

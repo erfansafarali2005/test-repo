@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %} Home page {% endblock title %}
+
+{% block body %}
+
+    <h1>Welcome sir !</h1>
+
+    {% if posts %}
+        {% for post in posts %}
+
+            <a href="{{ post.get_absolute_url }}" ><h2>{{ post.body | truncatewords:8 }}</h2></a>
+        {% endfor %}
+    {% endif %}
+
+{% endblock body %}

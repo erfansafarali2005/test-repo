@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %} Home page {% endblock title %}
+
+{% block body %}
+
+    <form action="" method="get">
+        {{ form.as_p }}
+        <input type="submit" value="Search">
+    </form><br/><br/>
+
+    {% for post in posts %}
+
+        <a href="{% url 'account:user_profile' post.user.id %}"><h1>{{ post.user.username }}</h1></a>
+        <!-- <a href="{% url 'home:post_detail' post.id post.slug %}" ><h2>{{ post.body | truncatewords:8 }}</h2></a> -->
+         <a href="{{ post.get_absolute_url }}" ><h2>{{ post.body | truncatewords:8 }}</h2></a>
+
+
+    {% endfor %}
+
+
+
+
+
+{% endblock body %}

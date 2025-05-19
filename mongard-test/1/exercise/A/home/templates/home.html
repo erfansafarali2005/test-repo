@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock title %}
+
+{% block body %}
+
+    {% for todo in todos %}
+
+
+        <a href="{% url 'todo:todo_detail' todo.id %}" ><h1>{{ todo.title }}</h1></a>
+        <h2>{{ todo.body }}</h2>
+        <h3>{{ todo.created_date }}</h3>
+        <h4>{{ todo.updated_date }}</h4><hr>
+
+    {% endfor %}
+
+
+
+
+{% endblock body %}

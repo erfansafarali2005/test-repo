@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %} Create Form {% endblock title %}
+
+{% block body %}
+
+
+<form action="{% url 'home:create_todo_html' %}" method="post">
+    {% csrf_token %}
+
+    <label>Title:</label>
+    <input type="text" name="title"  >
+
+    <label >Description:</label>
+    <input type="text" name="description"  >
+
+    <button type="submit">Create Todo</button>
+</form>
+
+
+
+
+
+
+
+
+
+
+{% endblock body %}

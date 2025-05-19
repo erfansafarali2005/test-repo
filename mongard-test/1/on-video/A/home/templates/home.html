@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %} HOme {% endblock title %}
+
+{% block body %}
+
+
+<!--    {% if user.name == 'admin' %}
+        <h1>Hello my admin</h1>
+    {% else %}
+        <h1>Hellow {{user.name | upper}}</h1>
+    {% endif %}  tags must be closed -->
+
+    {% if todos %}
+        {% for todo in todos %}
+            <!-- <a href="/detail/{{todo.id}}"><h1>title : {{ todo.title }}</h1></a> -->
+            <a href=" {% url 'home:detail' todo.id %} "><h1> title : {{ todo.title }}</h1></a>
+            <h3> creation date :  {{ todo.created_date }} </h3>
+
+        {% endfor %}
+    {% else %}
+        <h1>no todo</h1>
+    {% endif %}
+
+{% endblock body %}
