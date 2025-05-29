@@ -1,5 +1,6 @@
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from django.views import View
 from .forms import UserRegistrationForm , UserLoginForm
 from django.contrib import messages
@@ -7,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from post.models import Post
 from .models import Relation
-
+from django.contrib.auth import views as auth_views
 
 class UserRegisterView(View):
     template_name = 'account/register.html'
@@ -152,5 +153,22 @@ class UserUnFollowingView(LoginRequiredMixin , View):
             messages.error(request, 'you are not following this user', 'danger')
 
         return redirect('account:user_profile', self.user.id)
+
+########################################################################################################################
+
+class PasswordChangeView(auth_views.PasswordResetView):
+    template_name = 'account/password_change.html'
+    success_url = reverse_lazy('account:password_reset_done')
+    email_template_name = 'account/password-reset-email.html'
+
+class PasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = 'account/password_reset_done.html'
+
+class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'account/password-reset-confirm.html'
+    success_url = reverse_lazy('account:password_reset_complete')
+
+class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = 'account/password-reset-complete.html'
 
 ########################################################################################################################

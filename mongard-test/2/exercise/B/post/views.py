@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect , get_object_or_404
 from django.utils.text import slugify
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import PostCreateUpdateForm
-from .models import Post
+from .forms import PostCreateUpdateForm , CommentCreateForm , CommentReplyForm
+from .models import Post , Comment
 from django.contrib import messages
 
 class PostCreateView(LoginRequiredMixin , View):
@@ -31,15 +31,33 @@ class PostCreateView(LoginRequiredMixin , View):
                 messages.error(request , 'there was a problem in creating your post' , 'danger')
                 return render(request , self.template_name , {'form':form})
 
-
+############################################################################################################################
 
 class PostDetailView(View):
     template_name = 'post/detail.html'
+    form_class = CommentCreateForm
+    form_class_reply = CommentReplyForm
+
+    def setup(self, request, *args, **kwargs):
+        self.post_instance = get_object_or_404(Post , id=kwargs['post_id'] , slug=kwargs['post_slug'])
+        return super().setup(request , args , kwargs)
 
     def get(self, request, post_id , post_slug):
-        post = Post.objects.get(id=post_id , slug=post_slug)
-        return render(request, self.template_name , {'post': post})
+        #post = Post.objects.get(id=post_id , slug=post_slug)
+        comments = self.post_instance.pcomments.filter(is_reply=False)
+        return render(request, self.template_name , {'post': self.post_instance , 'comments':comments , 'form':self.form_class, 'reply_form':self.form_class_reply,})
 
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.user = request.user
+            new_comment.post = self.post_instance
+            new_comment.save()
+            messages.success(request, 'your comment submitted successfully', 'success')
+            return redirect('post:post_detail', self.post_instance.id, self.post_instance.slug)
+
+############################################################################################################################
 
 
 class PostDeleteView(LoginRequiredMixin , View):
@@ -51,6 +69,8 @@ class PostDeleteView(LoginRequiredMixin , View):
         else:
             messages.danger(request , 'post could not be deleted , you can delete only your posts' , 'danger')
         return redirect("home:home")
+
+############################################################################################################################
 
 
 class PostUpdateView(LoginRequiredMixin , View):
@@ -83,3 +103,26 @@ class PostUpdateView(LoginRequiredMixin , View):
 
         return  render(request , self.template_name,{'form':form})
 
+############################################################################################################################
+
+
+class PostAddReplyView(View):
+    form = CommentReplyForm
+
+    def post(self , request , post_id , comment_id):
+        form = self.form(request.POST)
+        post = get_object_or_404(Post , id = post_id)
+        comment = get_object_or_404(Comment , id = comment_id)
+
+        if form.is_valid():
+            new_reply = form.save(commit=False)
+            new_reply.post = post
+            new_reply.reply = comment
+            new_reply.user = request.user
+            new_reply.is_reply = True
+            new_reply.save()
+            messages.success(request, 'your reply submitted successfully', 'success')
+        return redirect('post:post_detail', post.id, post.slug)
+
+
+############################################################################################################################

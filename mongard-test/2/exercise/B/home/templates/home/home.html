@@ -4,7 +4,10 @@
 
 {% block body %}
 
-    <h1>hello</h1>
+    <form action="" method="get">
+        {{ form.as_p }}
+        <input type="submit" value="Search">
+    </form><br/><br/>
 
     {% for post in posts %}
 

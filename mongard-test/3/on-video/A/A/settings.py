@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home.apps.HomeConfig',
     'accounts.apps.AccountsConfig',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -118,7 +119,42 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
+
+MEDIA_ROOT = BASE_DIR / 'media' #directory of he file
+MEDIA_URL = "/media/" # a url https://media/2025/03 ... | its in the inspect of chrome
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTH_USER_MODEL = 'accounts.User'
+
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
+        'OPTIONS': {
+            'access_key': '216643bc-a5e2-432c-a5c3-df7815a3d60c',
+            'secret_key': '60850c20bf35fdc12193e7eb2a43380223df51e6ca412e63a8835f35cd7c0479',
+            'bucket_name': 'django-shop-erfan',
+            'endpoint_url': 'https://s3.ir-thr-at1.arvanstorage.com',
+            'file_overwrite': False,
+            #'local_storage' : f'{BASE_DIR}/AWS/'
+
+
+        },
+    },
+
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        'OPTIONS': {
+
+        },
+    },
+}

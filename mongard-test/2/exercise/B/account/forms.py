@@ -41,3 +41,5 @@ class UserRegistrationForm(forms.Form):
 class UserLoginForm(forms.Form):
     login_form_username_or_email = forms.CharField(widget=forms.TextInput(attrs={'placeholder' : 'your username of email'}))
     login_form_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'your password'}))
+
+
